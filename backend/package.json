@@ -1,9 +1,7 @@
 {
-  "name": "redux-user-auth",
-  "version": "1.0.0",
-  "type": "module",
-  "description": "User Authentication workflow made with the MERN stack",
-  "main": "index.js",
+  "name": "mit",
+  "description": "",
+  "main": "server.js",
   "scripts": {
     "start": "node server",
     "server": "nodemon server"
@@ -14,7 +12,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": ""
   },
