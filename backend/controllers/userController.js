@@ -2,6 +2,20 @@ import asyncHandler from 'express-async-handler'
 import User from '../models/userModel.js'
 import generateToken from '../utils/generateToken.js'
 
+
+
+
+
+const userToken = '...' // get the user token from your Redux store
+
+fetch('/api/user/profile', {
+  headers: {
+    'Authorization': `Bearer ${userToken}`
+  }
+})
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error(error))
 const registerUser = asyncHandler(async (req, res) => {
   const { firstName, email, password } = req.body
 
@@ -14,7 +28,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   // create new user document in db
-  const user = await User.create({ firstName, email, password, balance: 0 })
+  const user = await User.create({ firstName, email, password })
 
   if (user) {
     res.status(201).json({
@@ -58,6 +72,8 @@ const getUserProfile = asyncHandler(async (req, res) => {
       id: user._id,
       firstName: user.firstName,
       email: user.email,
+      balance: user.balance,
+      
     })
   } else {
     res.status(404)
