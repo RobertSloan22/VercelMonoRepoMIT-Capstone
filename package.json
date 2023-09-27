@@ -1,9 +1,9 @@
 {
-  "name": "redux-user-auth",
+  "name": "banking",
   "version": "1.0.0",
   "type": "module",
-  "description": "Mern FullStack",
-  "main": "server.js",
+  "description": "mern",
+  "main": "index.js",
   "scripts": {
     "build": "vite build",
     "preview": "vite preview",
