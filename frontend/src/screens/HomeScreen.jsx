@@ -16,8 +16,14 @@ const HomeScreen = () => {
       <br />
       <Card>
         <Card.Body>
+          <Card.Header>
+        THIS SITE IS BUILD WITH SECURE LOGIN / JWT / REDUXTOOLKIT/ MONGODB /
+            EXPRESS / REACT / NODEJS / REACT-BOOTSTRAP / REST - API
+            JAVASCRIPT / CSS STYLING/ DEPLOYED TO THE CLOUD/
+            [A FULLSTACK MERN APPLICATION] - ROBERT A, SLOAN
+            
+         </Card.Header>
           <Card.Text>
-            THIS SITE USES JWT / REDUXTOOLKIT/ MONGODB / EXPRESS / REACT / NODEJS / REACT-BOOTSTRAP 
 
           </Card.Text>
         </Card.Body>
