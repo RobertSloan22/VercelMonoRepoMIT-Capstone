@@ -1,58 +1,139 @@
-import path from 'path'
-import cors from 'cors'
-import express from 'express'
-import dotenv from 'dotenv'
-import colors from 'colors'
-import connectDB from './config/db.js'
-import userRoutes from './routes/userRoutes.js'
-import { errorHandler, notFound } from './middleware/errorMiddleware.js'
+import asyncHandler from 'express-async-handler'
+import User from '../models/userModel.js'
+import generateToken from '../utils/generateToken.js'
 
-const __dirname = path.resolve()
 
-// Deployment configuration
-//configure env file in dev mode
-dotenv.config()
 
-// configure env file in production
-if (process.env.NODE_ENV === undefined) {
-  dotenv.config({ path: '../.env' })
-}
 
-// Connect to database
-connectDB()
 
-const app = express()
+const userToken = '...' // get the user token from your Redux store
 
-// Body parser
-app.use(express.json())
+fetch('/api/user/profile', {
+  headers: {
+    'Authorization': `Bearer ${userToken}`
+  }
+})
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error(error))
+const registerUser = asyncHandler(async (req, res) => {
+  const { firstName, email, password } = req.body
 
-// CORS
-app.use(
-  cors({
-    origin: '*',
-  })
-)
+  // check if email exists in db
+  const userExists = await User.findOne({ email })
 
-// API routes
-app.use('/api/user', userRoutes)
+  if (userExists) {
+    res.status(404)
+    throw new Error('User already exists')
+  }
 
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '/frontend/build')))
+  // create new user document in db
+  const user = await User.create({ firstName, email, password })
 
-  app.get('*', (req, res) =>
-    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
-  )
-}
+  if (user) {
+    res.status(201).json({
+      _id: user._id,
+      firstName: user.firstName,
+      email: user.email,
+    })
+  } else {
+    res.status(400)
+    throw new Error('Invalid user data')
+  }
+})
 
-// Middleware
-app.use(notFound)
-app.use(errorHandler)
+const loginUser = asyncHandler(async (req, res) => {
+  const { email, password } = req.body
 
-const PORT = process.env.PORT || 5000
-app.listen(
-  PORT,
-  console.log(
-    `Server running in ${process.env.NODE_ENV} mode on port http://localhost:${PORT}`
-      .yellow.bold
-  )
-)
+  // check if user email exists in db
+  const user = await User.findOne({ email })
+
+  // return user obj if their password matches
+  if (user && (await user.matchPassword(password))) {
+    res.json({
+      _id: user._id,
+      firstName: user.firstName,
+      email: user.email,
+      balance: user.balance,
+      userToken: generateToken(user._id),
+    })
+  } else {
+    res.status(401)
+    throw new Error('Invalid email or password')
+  }
+})
+
+const getUserProfile = asyncHandler(async (req, res) => {
+  // req.user was set in authMiddleware.js
+  const user = await User.findById(req.user._id)
+
+  if (user) {
+    res.json({
+      id: user._id,
+      firstName: user.firstName,
+      email: user.email,
+      balance: user.balance,
+      
+    })
+  } else {
+    res.status(404)
+    throw new Error('User not found')
+  }
+})
+
+
+// @desc    Get user profile
+// @route   GET /api/users/profile
+// @access  Private
+
+
+// @desc    Deposit funds
+// @route   POST /api/users/deposit
+// @access  Private
+const depositFunds = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    user.balance += req.body.amount;
+    const updatedUser = await user.save();
+    res.json({
+      _id: updatedUser._id,
+      firstName: updatedUser.firstName,
+      lastName: updatedUser.lastName,
+      email: updatedUser.email,
+      balance: updatedUser.balance,
+    });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
+
+// @desc    Withdraw funds
+// @route   POST /api/users/withdraw
+// @access  Private
+ const withdrawFunds = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    if (req.body.amount > user.balance) {
+      res.status(400);
+      throw new Error('Insufficient funds');
+    } else {
+      user.balance -= req.body.amount;
+      const updatedUser = await user.save();
+      res.json({
+        _id: updatedUser._id,
+        firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
+        email: updatedUser.email,
+        balance: updatedUser.balance,
+      });
+    }
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
+
+export { registerUser, loginUser, getUserProfile, depositFunds, withdrawFunds }
