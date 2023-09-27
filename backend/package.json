@@ -1,8 +1,8 @@
 {
-    "name": "redux-user-auth",
+    "name": "",
     "version": "1.0.0",
     "type": "module",
-    "description": "User Authentication workflow made with the MERN stack",
+    "description": "",
     "main": "index.js",
     "scripts": {
       "start": "node server",
@@ -13,9 +13,9 @@
     "author": "",
     "license": "ISC",
     "bugs": {
-      "url": "https://github.com/Chinwike1/redux-user-auth/issues"
+      "url": ""
     },
-    "homepage": "https://github.com/Chinwike1/redux-user-auth#readme",
+    "homepage": "",
     "devDependencies": {
       "nodemon": "^2.0.16"
     },
