@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 const backendURL =
   process.env.NODE_ENV !== 'production'
-    ? 'https://notamonobackend-pn1tuvuxt-robertsloan22.vercel.app/'
+    ? 'https://localhost:5000'
     : import.meta.env.VITE_SERVER_URL
 
 export const authApi = createApi({
