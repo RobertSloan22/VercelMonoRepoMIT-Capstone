@@ -17,7 +17,7 @@ const HomeScreen = () => {
       <Card>
         <Card.Body>
           <Card.Text>
-            
+            THIS SITE USES JWT / REDUXTOOLKIT/ MONGODB / EXPRESS / REACT / NODEJS / REACT-BOOTSTRAP 
 
           </Card.Text>
         </Card.Body>
