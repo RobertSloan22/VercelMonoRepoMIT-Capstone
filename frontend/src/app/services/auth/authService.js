@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 const backendURL =
   process.env.NODE_ENV !== 'production'
-    ?'https://oceanconnect-a532f183b3af.herokuapp.com/''
+    ?'https://localhost:5000'
     : import.meta.env.VITE_SERVER_URL
 
 export const authApi = createApi({
