@@ -4,7 +4,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 const backendURL =
   process.env.NODE_ENV !== 'production'
     ? 'https://localhost:5000'
-    : import.meta.env.VITE_SERVER_URL
+    : 'https://oceanconnect-a532f183b3af.herokuapp.com/'
 
 export const userLogin = createAsyncThunk(
   'auth/login',
